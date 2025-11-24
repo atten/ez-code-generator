@@ -12,7 +12,7 @@ before_script:
 
 gradle:
   stage: build
-  image: openjdk:11
+  image: amazoncorretto:11-alpine
   only:
     refs:
       - branches
@@ -35,7 +35,7 @@ gradle:
 
 run-tests:
   stage: test
-  image: openjdk:11
+  image: amazoncorretto:11-alpine
   cache:
     - key: $CI_COMMIT_REF_SLUG
       policy: pull
@@ -122,7 +122,7 @@ run-tests-PyDjangoModelGenerator:
 
 publish-archive:
   stage: publish
-  image: openjdk:11
+  image: amazoncorretto:11-alpine
   only:
     refs:
       - branches
