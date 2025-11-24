@@ -4,7 +4,7 @@
 [![coverage](https://gitlab.com/atten0/ez-code-generator/badges/master/coverage.svg)](http://www.jacoco.org/jacoco)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/ez-code-generator?link=https%3A%2F%2Fpypi.org%2Fproject%2Fez-code-generator)](https://pypi.org/project/ez-code-generator)
 
-Console tool for generating API clients, data classes and validators. Written in Kotlin, produces Kotlin and Python code. For the input it takes OpenApi document (JSON/YAML, v2.0 ‒ v4.0.0) or custom codegen schema (JSON).
+Console tool for generating API clients, data classes and validators. Written in Kotlin, produces Kotlin and Python code. For the input it takes OpenApi document (JSON/YAML, v2.0 ‒ v3.1.0) or custom codegen schema (JSON).
 
 The main goal of this project is to reduce integration costs between teams in multi-service environments.
 

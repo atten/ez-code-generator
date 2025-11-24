@@ -138,3 +138,17 @@ def test_custom_exception_class():
     api = Generated(base_url="http://none", max_retries=0, exception_class=ApiError)
     with pytest.raises(ApiError):
         api.ping()
+
+
+def test_callable_header():
+    def get_header() -> str:
+        return os.environ['SECURED_HEADER_VALUE']
+
+    api = Generated(
+        base_url=SECURED_BASE_URL,
+        user_agent=os.environ['SECURED_USER_AGENT'],
+        headers={
+            os.environ['SECURED_HEADER_NAME']: get_header
+        }
+    )
+    api.ping()

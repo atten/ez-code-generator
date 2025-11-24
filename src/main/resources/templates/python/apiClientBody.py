@@ -2,7 +2,7 @@
     def __init__(
         self,
         base_url: str = '',
-        headers: dict[str, str] | None = None,
+        headers: dict[str, str | t.Callable[[], str]] | None = None,
         logger: t.Union[logging.Logger, t.Callable[[str], None], None] = None,
         max_retries: int = int(os.environ.get('API_CLIENT_MAX_RETRIES', 5)),
         retry_timeout: float = float(os.environ.get('API_CLIENT_RETRY_TIMEOUT', 3)),

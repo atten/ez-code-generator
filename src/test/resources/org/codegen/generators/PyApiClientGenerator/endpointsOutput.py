@@ -28,7 +28,7 @@ class Generated:
     def __init__(
         self,
         base_url: str = '',
-        headers: dict[str, str] | None = None,
+        headers: dict[str, str | t.Callable[[], str]] | None = None,
         logger: t.Union[logging.Logger, t.Callable[[str], None], None] = None,
         max_retries: int = int(os.environ.get('API_CLIENT_MAX_RETRIES', 5)),
         retry_timeout: float = float(os.environ.get('API_CLIENT_RETRY_TIMEOUT', 3)),
@@ -239,7 +239,7 @@ class BaseJsonHttpClient:
         max_retries: int,
         retry_timeout: float,
         user_agent: str | None,
-        headers: dict[str, str] | None,
+        headers: dict[str, str | t.Callable[[], str]] | None,
         use_response_streaming: bool,
         use_debug_curl: bool,
         request_kwargs: dict,
@@ -281,7 +281,7 @@ class BaseJsonHttpClient:
         :return: decoded JSON from server
         """
         full_url = self._get_full_url(url, query_params)
-        headers = self._headers.copy() if self._headers else dict()
+        headers = self._build_headers()
         body = None
         if json_body is not None:
             body = json.dumps(json_body).encode('utf8')
@@ -289,8 +289,6 @@ class BaseJsonHttpClient:
         if form_fields is not None:
             body = urlencode(form_fields)
             headers['content-type'] = 'application/x-www-form-urlencoded'
-        if self._user_agent:
-            headers['user-agent'] = self._user_agent
 
         request_kwargs = self._request_kwargs.copy()
         request_kwargs.update(
@@ -359,6 +357,24 @@ class BaseJsonHttpClient:
                 url += '?' + urlencode(query_tuples)
 
         return url
+
+    def _build_headers(self) -> dict[str, str]:
+        """
+        Render headers dictionary, convert callable headers into strings (if any).
+        """
+        headers = {}
+
+        if self._headers:
+            for key, value in self._headers.items():
+                if callable(value):
+                    headers[key] = value()
+                else:
+                    headers[key] = value
+
+        if self._user_agent:
+            headers['user-agent'] = self._user_agent
+
+        return headers
 
 
 class BaseSerializer:

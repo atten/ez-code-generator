@@ -10,7 +10,7 @@ class BaseJsonHttpAsyncClient:
         max_retries: int,
         retry_timeout: float,
         user_agent: str | None,
-        headers: dict[str, str] | None,
+        headers: dict[str, str | t.Callable[[], str]] | None,
         use_response_streaming: bool,
         use_debug_curl: bool,
         request_kwargs: dict,
@@ -48,14 +48,12 @@ class BaseJsonHttpAsyncClient:
         :return: decoded JSON from server
         """
         full_url = self._get_full_url(url, query_params)
-        headers = self._headers.copy() if self._headers else dict()
+        headers = self._build_headers()
         if json_body is not None:
             headers['content-type'] = 'application/json'
         if form_fields is not None:
             json_body = urlencode(form_fields)
             headers['content-type'] = 'application/x-www-form-urlencoded'
-        if self._user_agent:
-            headers['user-agent'] = self._user_agent
 
         request_kwargs = self._request_kwargs.copy()
         request_kwargs.update(
@@ -119,3 +117,21 @@ class BaseJsonHttpAsyncClient:
                 url += '?' + urlencode(query_tuples)
 
         return url
+
+    def _build_headers(self) -> dict[str, str]:
+        """
+        Render headers dictionary, convert callable headers into strings (if any).
+        """
+        headers = {}
+
+        if self._headers:
+            for key, value in self._headers.items():
+                if callable(value):
+                    headers[key] = value()
+                else:
+                    headers[key] = value
+
+        if self._user_agent:
+            headers['user-agent'] = self._user_agent
+
+        return headers
