@@ -139,8 +139,8 @@ Requires: Java 11
 Download and extract archive into current dir:
 
 ```shell
-wget -qO- https://github.com/atten/ez-code-generator/releases/download/v4.0.0/ez-codegen-4.0.0.zip | busybox unzip -
-cd ez-codegen-4.0.0/bin/
+wget -qO- https://github.com/atten/ez-code-generator/releases/download/v4.1.0/ez-codegen-4.1.0.zip | busybox unzip -
+cd ez-codegen-4.1.0/bin/
 chmod +x ez-codegen
 ```
 
@@ -151,7 +151,7 @@ Other versions: [Gitlab](https://gitlab.com/atten0/ez-code-generator/-/jobs/arti
 Requires: Java 11, Python3
 
 ```shell
-pip install ez-code-generator==4.0.0
+pip install ez-code-generator==4.1.0
 ```
 
 Other versions: [PYPI](https://pypi.org/project/ez-code-generator/#history)
