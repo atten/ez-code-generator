@@ -253,12 +253,10 @@ def timedelta_to_java_duration(delta: timedelta) -> str:
 
 
 class StrEnum(str, Enum):
-    """
-    Enum where members are also (and must be) strings
-    """
+    """Enum where members are also (and must be) strings."""
 
     def __new__(cls, *values):
-        "values must already be of type `str`"
+        """Values must already be of type `str`"""
         value = str(*values)
         member = str.__new__(cls, value)
         member._value_ = value
@@ -277,7 +275,7 @@ class SomeEnum(StrEnum):
 @dataclass
 class AdvancedDto:
     # Example: [{"foo": "bar"}]
-    json_underscoded: dict | None = None
+    json_underscored: dict | None = field(metadata=dict(marshmallow_field=marshmallow.fields.Dict(allow_none=True, data_key="_json_underscored")), default=None)
     java_duration: timedelta | None = field(metadata=dict(marshmallow_field=JavaDurationField(allow_none=True, data_key="javaDuration")), default=None)
     # Enum field with the same name as of different entity
     some_enum: SomeEnum | None = field(metadata=dict(marshmallow_field=marshmallow.fields.String(allow_none=True, validate=[marshmallow.fields.validate.OneOf(list(map(str, SomeEnum)))])), default="PAPER")
@@ -297,7 +295,7 @@ class BasicDto:
     some_number: float = field(metadata=dict(marshmallow_field=marshmallow.fields.Float()))
     boolean_with_default: bool = field(metadata=dict(marshmallow_field=marshmallow.fields.Boolean(data_key="booleanWithDefault")), default=True)
     list_of_mixed_types: list[str] | None = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.String(), allow_none=True)), default=None)
-    list_of_objects: list[dict] | None = None
+    list_of_objects: list[dict] | None = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.Dict(), allow_none=True)), default=None)
     list_or_number: int | None = field(metadata=dict(marshmallow_field=marshmallow.fields.Integer(allow_none=True)), default=None)
     mixed_enums: str | None = field(metadata=dict(marshmallow_field=marshmallow.fields.String(allow_none=True)), default=None)
     nested_object: AdvancedDto | None = field(metadata=dict(marshmallow_field=marshmallow.fields.Nested(marshmallow_dataclass.class_schema(AdvancedDto, base_schema=BaseSchema), allow_none=True)), default=None)

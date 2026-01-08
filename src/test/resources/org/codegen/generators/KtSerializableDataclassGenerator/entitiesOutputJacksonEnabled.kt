@@ -27,6 +27,10 @@ data class BasicDto(
     @JsonProperty("enum_value")
     @SerialName("enum_value")
     val enumValue: EnumValue,
+    @Contextual
+    @JsonProperty("json_value")
+    @SerialName("json_value")
+    val jsonValue: Map,
     // short description
     // very long description lol
     @JsonProperty("customName")
@@ -62,10 +66,10 @@ data class ContainerDto(
     @JsonProperty("basic")
     @SerialName("basic")
     val basicSingle: BasicDto,
-    @JsonProperty("basic_list")
-    @SerialName("basic_list")
-    val basicList: List<@Contextual BasicDto>,
     @JsonProperty("basics")
     @SerialName("basics")
+    val basicList: List<@Contextual BasicDto>,
+    @JsonProperty("basic_nullable_list")
+    @SerialName("basic_nullable_list")
     val basicOptionalList: List<@Contextual BasicDto?>,
 )

@@ -17,13 +17,24 @@ def basic_dto() -> dto.BasicDto:
     return dto.BasicDto(
         timestamp=datetime.now(),
         duration=timedelta(minutes=5),
-        enum_value=constants.ValuesEnum.VALUE_1,
+        enum_value=constants.EnumValue.VALUE_1,
+        json_value={'foo': 5},
         documented_value=2.5,
         list_value=[50, 100, 150]
     )
 
 @pytest.mark.asyncio
 async def test_get():
+    api = Generated(base_url=BASE_URL)
+    result = await api.get_container_dto()
+
+    assert isinstance(result, dto.ContainerDto)
+    assert isinstance(result.basic_single, dto.BasicDto)
+    assert isinstance(result.basic_list[0], dto.BasicDto)
+
+
+@pytest.mark.asyncio
+async def test_get_parametrized():
     api = Generated(base_url=BASE_URL)
     timestamp = datetime.now(tz=timezone.utc)
     result = await api.get_basic_dto_by_timestamp(timestamp)
@@ -70,16 +81,10 @@ async def test_post_empty_list():
 
 
 @pytest.mark.asyncio
-async def test_post_request_wrong_enum_value():
+async def test_post_request_wrong_enum_value(basic_dto):
     api = Generated()
-    item = dto.BasicDto(
-        timestamp=datetime.now(),
-        duration=timedelta(minutes=5),
-        enum_value=constants.ValuesEnum.VALUE_1 + 'azaza',
-        documented_value=2.5,
-        list_value=[50, 100, 150]
-    )
-    payload = [item]
+    basic_dto.enum_value = constants.EnumValue.VALUE_1 + 'azaza',
+    payload = [basic_dto]
     result = api.create_basic_dto_bulk(payload)
 
     with pytest.raises(ValidationError):

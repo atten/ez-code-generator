@@ -74,12 +74,10 @@ def timedelta_to_java_duration(delta: timedelta) -> str:
 
 
 class StrEnum(str, Enum):
-    """
-    Enum where members are also (and must be) strings
-    """
+    """Enum where members are also (and must be) strings."""
 
     def __new__(cls, *values):
-        "values must already be of type `str`"
+        """Values must already be of type `str`"""
         value = str(*values)
         member = str.__new__(cls, value)
         member._value_ = value
@@ -100,6 +98,7 @@ class BasicDto:
     timestamp: datetime = field(metadata=dict(marshmallow_field=marshmallow.fields.DateTime()))
     duration: timedelta = field(metadata=dict(marshmallow_field=JavaDurationField()))
     enum_value: EnumValue = field(metadata=dict(marshmallow_field=marshmallow.fields.String(validate=[marshmallow.fields.validate.OneOf(list(map(str, EnumValue)))])))
+    json_value: dict = field(metadata=dict(marshmallow_field=marshmallow.fields.Dict()))
     # short description
     # very long description lol
     documented_value: float = field(metadata=dict(marshmallow_field=marshmallow.fields.Float(data_key="customName")))
@@ -134,8 +133,8 @@ class ContainerDto:
     entity with containers
     """
     basic_single: BasicDto = field(metadata=dict(marshmallow_field=marshmallow.fields.Nested(marshmallow_dataclass.class_schema(BasicDto, base_schema=BaseSchema), data_key="basic")))
-    basic_list: list[BasicDto] = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.Nested(marshmallow_dataclass.class_schema(BasicDto, base_schema=BaseSchema)))))
-    basic_optional_list: list[BasicDto] | None = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.Nested(marshmallow_dataclass.class_schema(BasicDto, base_schema=BaseSchema)), allow_none=True, data_key="basics")))
+    basic_list: list[BasicDto] = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.Nested(marshmallow_dataclass.class_schema(BasicDto, base_schema=BaseSchema)), data_key="basics")))
+    basic_optional_list: list[BasicDto] | None = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.Nested(marshmallow_dataclass.class_schema(BasicDto, base_schema=BaseSchema)), allow_none=True, data_key="basic_nullable_list")))
 
 
 __all__ = [

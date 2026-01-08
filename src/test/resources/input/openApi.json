@@ -388,7 +388,7 @@
       "AdvancedDTO": {
         "type": "object",
         "properties": {
-          "_json_underscoded": {
+          "_json_underscored": {
             "title": "Some object",
             "description": "Example: [{\"foo\": \"bar\"}]",
             "type": "object"

@@ -11,6 +11,7 @@ class BasicDto:
     timestamp: datetime = field()
     duration: timedelta = field()
     enum_value: str = field()
+    json_value: dict = field()
     # short description
     # very long description lol
     documented_value: float = field()

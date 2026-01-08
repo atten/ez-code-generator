@@ -243,8 +243,20 @@
     {
       "dtype": "json",
       "implementations": {
+        "KT_DATACLASS": {
+          "definition": "Map"
+        },
         "PY_DATACLASS": {
           "definition": "dict"
+        },
+        "PY_MARSHMALLOW_DATACLASS": {
+          "definition": "dict",
+          "requiredHeaders": [
+            "import marshmallow"
+          ],
+          "definitionArguments": {
+            "metadata": "dict(marshmallow_field=marshmallow.fields.Dict({metadata}))"
+          }
         },
         "PY_DJANGO_MODEL": {
           "definition": "models.JSONField",

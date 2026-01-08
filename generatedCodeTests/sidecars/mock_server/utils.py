@@ -24,7 +24,15 @@ def item_factory() -> dict:
         "timestamp": "2024-07-14T12:00:00Z",
         "duration": "PT10H50S",
         "enum_value": "value 1",
+        "json_value": {'foo': 1, 'bar': [{'foobar': 2}]},
         "customName": 100.5,
         "listValue": [100, 200, 300],
         "non_existent_field": "text",
+    }
+
+def item_container_factory() -> dict:
+    return {
+        "basic": item_factory(),
+        "basics": [item_factory(), item_factory()],
+        "basic_nullable_list": None,
     }

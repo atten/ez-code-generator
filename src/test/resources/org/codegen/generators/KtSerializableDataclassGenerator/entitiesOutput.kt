@@ -25,6 +25,9 @@ data class BasicDto(
     val duration: Duration,
     @SerialName("enum_value")
     val enumValue: EnumValue,
+    @Contextual
+    @SerialName("json_value")
+    val jsonValue: Map,
     // short description
     // very long description lol
     @SerialName("customName")
@@ -55,8 +58,8 @@ data class ContainerDto(
     @Contextual
     @SerialName("basic")
     val basicSingle: BasicDto,
-    @SerialName("basic_list")
-    val basicList: List<@Contextual BasicDto>,
     @SerialName("basics")
+    val basicList: List<@Contextual BasicDto>,
+    @SerialName("basic_nullable_list")
     val basicOptionalList: List<@Contextual BasicDto?>,
 )

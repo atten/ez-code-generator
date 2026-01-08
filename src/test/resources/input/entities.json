@@ -32,6 +32,10 @@
           }
         },
         {
+          "name": "json value",
+          "dtype": "json"
+        },
+        {
           "name": "documented value",
           "dtype": "float",
           "description": "short description",
@@ -99,14 +103,15 @@
         {
           "name": "basic list",
           "dtype": "basic DTO",
-          "many": true
+          "many": true,
+          "serializedName": "basics"
         },
         {
           "name": "basic optional list",
           "dtype": "basic DTO",
           "many": true,
           "nullable": true,
-          "serializedName": "basics"
+          "serializedName": "basic_nullable_list"
         }
       ]
     }

@@ -1,10 +1,8 @@
 class StrEnum(str, Enum):
-    """
-    Enum where members are also (and must be) strings
-    """
+    """Enum where members are also (and must be) strings."""
 
     def __new__(cls, *values):
-        "values must already be of type `str`"
+        """Values must already be of type `str`"""
         value = str(*values)
         member = str.__new__(cls, value)
         member._value_ = value

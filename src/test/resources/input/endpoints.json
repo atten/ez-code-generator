@@ -65,6 +65,12 @@
           }
         }
       ]
+    },
+    {
+      "name": "get container DTO",
+      "dtype": "container DTO",
+      "verb": "GET",
+      "path": "/api/v1/container"
     }
   ]
 }

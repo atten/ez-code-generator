@@ -76,7 +76,14 @@ class Generated:
             use_request_payload_validation=use_request_payload_validation
         )
 
-    async def some_action(self, enum: 'ValuesEnum'):
+    async def get_container_dto(self) -> 'ContainerDto':
+        raw_data = await self._client.fetch(
+            url='/api/v1/container',
+        )
+        gen = self._deserializer.deserialize(raw_data, ContainerDto)
+        return next(gen)
+
+    async def some_action(self, enum: 'EnumValue'):
         await self._client.fetch(
             url=f'api/v1/action/{enum}',
             method='POST',
@@ -191,12 +198,10 @@ def timedelta_to_java_duration(delta: timedelta) -> str:
 
 
 class StrEnum(str, Enum):
-    """
-    Enum where members are also (and must be) strings
-    """
+    """Enum where members are also (and must be) strings."""
 
     def __new__(cls, *values):
-        "values must already be of type `str`"
+        """Values must already be of type `str`"""
         value = str(*values)
         member = str.__new__(cls, value)
         member._value_ = value
@@ -206,7 +211,7 @@ class StrEnum(str, Enum):
         return self._value_
 
 
-class ValuesEnum(StrEnum):
+class EnumValue(StrEnum):
     VALUE_1 = "value 1"
     VALUE_2 = "value 2"
     VALUE_3 = "value 3"
@@ -216,7 +221,8 @@ class ValuesEnum(StrEnum):
 class BasicDto:
     timestamp: datetime = field(metadata=dict(marshmallow_field=marshmallow.fields.DateTime()))
     duration: timedelta = field(metadata=dict(marshmallow_field=JavaDurationField()))
-    enum_value: ValuesEnum = field(metadata=dict(marshmallow_field=marshmallow.fields.String(validate=[marshmallow.fields.validate.OneOf(list(map(str, ValuesEnum)))])))
+    enum_value: EnumValue = field(metadata=dict(marshmallow_field=marshmallow.fields.String(validate=[marshmallow.fields.validate.OneOf(list(map(str, EnumValue)))])))
+    json_value: dict = field(metadata=dict(marshmallow_field=marshmallow.fields.Dict()))
     # short description
     # very long description lol
     documented_value: float = field(metadata=dict(marshmallow_field=marshmallow.fields.Float(data_key="customName")))
@@ -224,6 +230,16 @@ class BasicDto:
     optional_value: float = field(metadata=dict(marshmallow_field=marshmallow.fields.Float()), default=0)
     nullable_value: bool | None = field(metadata=dict(marshmallow_field=marshmallow.fields.Boolean(allow_none=True)), default=None)
     optional_list_value: list[int] = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.Integer())), default_factory=list)
+
+
+@dataclass
+class ContainerDto:
+    """
+    entity with containers
+    """
+    basic_single: BasicDto = field(metadata=dict(marshmallow_field=marshmallow.fields.Nested(marshmallow_dataclass.class_schema(BasicDto, base_schema=BaseSchema), data_key="basic")))
+    basic_list: list[BasicDto] = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.Nested(marshmallow_dataclass.class_schema(BasicDto, base_schema=BaseSchema)), data_key="basics")))
+    basic_optional_list: list[BasicDto] | None = field(metadata=dict(marshmallow_field=marshmallow.fields.List(marshmallow.fields.Nested(marshmallow_dataclass.class_schema(BasicDto, base_schema=BaseSchema)), allow_none=True, data_key="basic_nullable_list")))
 
 
 JSON_PAYLOAD = t.Union[dict, str, int, float, list]
@@ -577,11 +593,12 @@ def build_curl_command(url: str, method: str, headers: dict[str, str], body: str
 
 
 class AllConstantsCollection:
-    ValuesEnum = ValuesEnum
+    EnumValue = EnumValue
 
 
 class AllDataclassesCollection:
     BasicDto = BasicDto
+    ContainerDto = ContainerDto
 
 
 __all__ = [

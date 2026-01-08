@@ -20,6 +20,7 @@ class BasicDto(models.Model):
     optional_value = models.FloatField(default=0)
     nullable_value = models.BooleanField(null=True, blank=True)
     enum_value = models.CharField(max_length=7, choices=EnumValue.choices)
+    json_value = models.JSONField()
     documented_value = models.FloatField(verbose_name=_('short description'), help_text=_('very long description lol'))
     list_value = ArrayField(base_field=models.IntegerField())
     optional_list_value = ArrayField(blank=True, default=list, base_field=models.IntegerField())
