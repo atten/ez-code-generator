@@ -218,11 +218,19 @@ class EnumValue(StrEnum):
     VALUE_3 = "value 3"
 
 
+class BasicDtoType(StrEnum):
+    VALUE_1 = "value 1"
+    VALUE_2 = "value 2"
+    VALUE_3 = "value 3"
+
+
 @dataclass
 class BasicDto:
     timestamp: datetime = field(metadata=dict(marshmallow_field=marshmallow.fields.DateTime()))
     duration: timedelta = field(metadata=dict(marshmallow_field=JavaDurationField()))
     enum_value: EnumValue = field(metadata=dict(marshmallow_field=marshmallow.fields.String(validate=[marshmallow.fields.validate.OneOf(list(map(str, EnumValue)))])))
+    # enum with keyword name which should be replaced
+    type: BasicDtoType = field(metadata=dict(marshmallow_field=marshmallow.fields.String(validate=[marshmallow.fields.validate.OneOf(list(map(str, BasicDtoType)))])))
     json_value: dict = field(metadata=dict(marshmallow_field=marshmallow.fields.Dict()))
     # short description
     # very long description lol
@@ -605,6 +613,7 @@ def build_curl_command(url: str, method: str, headers: dict[str, str], body: str
 
 
 class AllConstantsCollection:
+    BasicDtoType = BasicDtoType
     EnumValue = EnumValue
 
 

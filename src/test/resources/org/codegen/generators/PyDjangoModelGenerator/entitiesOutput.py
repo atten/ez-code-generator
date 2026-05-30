@@ -14,12 +14,19 @@ class EnumValue(models.TextChoices):
     VALUE_3 = 'value 3', _('name 3')
 
 
+class BasicDtoType(models.TextChoices):
+    VALUE_1 = 'value 1', _('one')
+    VALUE_2 = 'value 2', _('two')
+    VALUE_3 = 'value 3', _('three')
+
+
 class BasicDto(models.Model):
     timestamp = models.DateTimeField()
     duration = models.CharField(max_length=32)
     optional_value = models.FloatField(default=0)
     nullable_value = models.BooleanField(null=True, blank=True)
     enum_value = models.CharField(max_length=7, choices=EnumValue.choices)
+    type = models.CharField(max_length=7, choices=BasicDtoType.choices, verbose_name=_('enum with keyword name which should be replaced'))
     json_value = models.JSONField()
     documented_value = models.FloatField(verbose_name=_('short description'), help_text=_('very long description lol'))
     list_value = ArrayField(base_field=models.IntegerField())

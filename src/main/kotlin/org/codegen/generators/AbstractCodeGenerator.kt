@@ -141,10 +141,6 @@ abstract class AbstractCodeGenerator(
             }
     }
 
-    protected fun containsCodePartExact(codePart: String) = codePart in codeParts
-
-    private fun containsCodePartFragment(name: String): Boolean = codeParts.find { it.contains(name) } != null
-
     protected fun renderEnumName(
         enumField: Field,
         vararg nameAliases: String,
@@ -159,6 +155,7 @@ abstract class AbstractCodeGenerator(
             )
                 .map { renderEntityName(it) }
                 .filter { !clashesWithBuiltinNames(it) }
+                .filter { it !in listOf("Type", "Enum", "Class", "Namespace") } // avoid common names
                 .first { !enumNames.values.contains(it) }
         }
     }
@@ -172,12 +169,11 @@ abstract class AbstractCodeGenerator(
 
     protected fun renderEntityName(name: String) = codeFormatRules.entityName(name)
 
-    private fun clashesWithBuiltinNames(name: String): Boolean {
-        return headers
+    private fun clashesWithBuiltinNames(name: String) =
+        headers
             .map { it.split(" ").map { word -> word.trim(',') } }
             .flatten()
             .count { name == it } > 0
-    }
 
     abstract fun renderEntity(entity: Entity): String
 

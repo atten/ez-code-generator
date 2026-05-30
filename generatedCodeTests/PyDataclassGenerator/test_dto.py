@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_import():
     from generated.dto import AdvancedDto  # noqa
 

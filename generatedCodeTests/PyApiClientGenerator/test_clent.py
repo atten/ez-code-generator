@@ -19,6 +19,7 @@ def basic_dto() -> dto.BasicDto:
         timestamp=datetime.now(),
         duration=timedelta(minutes=5),
         enum_value=constants.EnumValue.VALUE_1,
+        type=constants.BasicDtoType.VALUE_1,
         json_value={'foo': 5},
         documented_value=2.5,
         list_value=[50, 100, 150]

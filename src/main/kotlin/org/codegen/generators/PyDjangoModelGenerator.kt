@@ -4,7 +4,6 @@ import org.codegen.schema.Constants.Companion.EMPTY
 import org.codegen.schema.Constants.Companion.UNSET
 import org.codegen.schema.Entity
 import org.codegen.utils.CodeFormatRules
-import org.codegen.utils.camelCase
 import org.codegen.utils.snakeCase
 
 class PyDjangoModelGenerator(proxy: AbstractCodeGenerator? = null) : AbstractCodeGenerator(
@@ -75,7 +74,7 @@ class PyDjangoModelGenerator(proxy: AbstractCodeGenerator? = null) : AbstractCod
 
             field.enum?.let {
                 val subclass = "models.TextChoices"
-                val enumName = (field.enumPrefix ?: field.name).camelCase()
+                val enumName = renderEnumName(field, "${entity.name} ${field.name}")
                 val choicesDefinition =
                     it.map { entry -> "    ${entry.key.snakeCase().uppercase()} = '${entry.key}', _('${entry.value}')" }.joinToString(
                         separator = "\n",

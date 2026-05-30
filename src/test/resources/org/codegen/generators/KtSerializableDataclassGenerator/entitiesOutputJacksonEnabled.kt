@@ -19,6 +19,16 @@ enum class EnumValue(val value: String) {
 }
 
 @Serializable
+enum class ValuesEnum(val value: String) {
+    @SerialName("value 1")
+    VALUE_1("value 1"),
+    @SerialName("value 2")
+    VALUE_2("value 2"),
+    @SerialName("value 3")
+    VALUE_3("value 3"),
+}
+
+@Serializable
 data class BasicDto(
     @Contextual
     val timestamp: Instant,
@@ -27,6 +37,8 @@ data class BasicDto(
     @JsonProperty("enum_value")
     @SerialName("enum_value")
     val enumValue: EnumValue,
+    // enum with keyword name which should be replaced
+    val type: ValuesEnum,
     @Contextual
     @JsonProperty("json_value")
     @SerialName("json_value")

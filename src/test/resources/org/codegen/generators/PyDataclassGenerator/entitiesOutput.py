@@ -11,6 +11,8 @@ class BasicDto:
     timestamp: datetime = field()
     duration: timedelta = field()
     enum_value: str = field()
+    # enum with keyword name which should be replaced
+    type: str = field()
     json_value: dict = field()
     # short description
     # very long description lol

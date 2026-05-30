@@ -24,6 +24,7 @@ def item_factory() -> dict:
         "timestamp": "2024-07-14T12:00:00Z",
         "duration": "PT10H50S",
         "enum_value": "value 1",
+        "type": "value 1",
         "json_value": {'foo': 1, 'bar': [{'foobar': 2}]},
         "customName": 100.5,
         "listValue": [100, 200, 300],

@@ -32,6 +32,16 @@
           }
         },
         {
+          "name": "type",
+          "description": "enum with keyword name which should be replaced",
+          "dtype": "str",
+          "enum": {
+            "value 1": "one",
+            "value 2": "two",
+            "value 3": "three"
+          }
+        },
+        {
           "name": "json value",
           "dtype": "json"
         },

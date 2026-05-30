@@ -39,7 +39,7 @@ open class KtDataclassGenerator(includedEntityType: AllGeneratorsEnum, parent: A
 
         val typeName =
             dataType.definition
-                .let { if (field.isEnum) (field.enumPrefix ?: field.name).camelCase() else it }
+                .let { if (field.isEnum) renderEnumName(field) else it }
                 .let { if (field.nullable) "$it?" else it }
                 .let { if (field.many) "List<$it>" else it }
         return "$definitionKeyword $fieldName: $typeName $assignmentExpression".trim()
@@ -69,7 +69,7 @@ open class KtDataclassGenerator(includedEntityType: AllGeneratorsEnum, parent: A
             val fullDefinition = buildFieldDefinition(field)
 
             field.enum?.let { enum ->
-                val enumName = (field.enumPrefix ?: field.name).camelCase()
+                val enumName = renderEnumName(field)
                 val enumBody =
                     enum.map { row -> buildEnumItem(row.key) }.joinToString(
                         separator = "\n",
