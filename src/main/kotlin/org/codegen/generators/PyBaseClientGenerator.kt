@@ -87,14 +87,6 @@ abstract class PyBaseClientGenerator(proxy: AbstractCodeGenerator? = null) : Abs
         val returnStatement =
             returnDtypeProps.definition
                 .let {
-                    if (!returnDtypeProps.isNative) {
-                        // wrap into quotes if definition is listed below
-                        "'$it'"
-                    } else {
-                        it
-                    }
-                }
-                .let {
                     if (endpoint.many) {
                         headers.add("import typing as t")
                         if (endpoint.cacheable) "list[$it]" else "t.Iterator[$it]"
@@ -105,6 +97,7 @@ abstract class PyBaseClientGenerator(proxy: AbstractCodeGenerator? = null) : Abs
                     }
                 }
                 .let { if (it == "None") ":" else " -> $it:" }
+
         val arguments = mutableListOf("self")
 
         for (argument in endpoint.argumentsSortedByDefaults) {
@@ -115,15 +108,22 @@ abstract class PyBaseClientGenerator(proxy: AbstractCodeGenerator? = null) : Abs
                     .let {
                         if (argument.isEnum) {
                             headers.add("from enum import Enum")
-                            renderEnumName(argument.toField()).also { name -> assignEnumName(argument.toField(), name) }
-                        } else {
-                            it
-                        }
-                    }
-                    .let {
-                        if (!dtypeProps.isNative || argument.isEnum) {
-                            // wrap into quotes if definition is listed below
-                            "'$it'"
+                            val enumName = renderEnumName(argument.toField()).also { name -> assignEnumName(argument.toField(), name) }
+                            val choices =
+                                argument.enum!!.keys.associate { key ->
+                                    key.snakeCase().uppercase() to dtypeProps.toGeneratedValue(key)
+                                }
+                            val choicesDefinition =
+                                choices.map { entry ->
+                                    "    ${entry.key} = ${entry.value}"
+                                }.joinToString(separator = "\n")
+                            val body = "class $enumName(StrEnum):\n$choicesDefinition"
+                            // build-in since python 3.11:
+                            // headers.add("from enum import StrEnum")
+                            // innerMetadata["validate"] = "[marshmallow.fields.validate.OneOf($enumName)]"
+                            addCodePart(Reader.readFileOrResourceOrUrl("resource:/templates/python/strEnum.py"))
+                            addCodePart(body, enumName)
+                            enumName
                         } else {
                             it
                         }
@@ -137,6 +137,11 @@ abstract class PyBaseClientGenerator(proxy: AbstractCodeGenerator? = null) : Abs
                         }
                     }
                     .let { if (argument.nullable) "$it | None" else it }
+
+            if (!dtypeProps.isNative || argument.isEnum) {
+                // custom types are referenced before definition
+                headers.add("from __future__ import annotations") // redundant since python 3.12
+            }
 
             val argDefaultValue =
                 buildArgumentDefaultValue(argument)
@@ -174,6 +179,11 @@ abstract class PyBaseClientGenerator(proxy: AbstractCodeGenerator? = null) : Abs
             ?.map { line -> line.trimEnd { it.isWhitespace() } }
             ?.forEach { lines.add("    $it") }
             ?.also { lines.add("    \"\"\"") }
+
+        if (!returnDtypeProps.isNative) {
+            // custom types are referenced before definition
+            headers.add("from __future__ import annotations") // redundant since python 3.12
+        }
 
         return lines.joinToString(separator = "\n")
     }

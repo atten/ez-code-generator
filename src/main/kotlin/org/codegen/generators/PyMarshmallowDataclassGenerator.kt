@@ -123,12 +123,11 @@ class PyMarshmallowDataclassGenerator(proxy: AbstractCodeGenerator? = null) : Py
                 headers.add("from enum import Enum")
                 val choices = field.enum!!.keys.associate { key -> buildEnumFieldName(key) to dtypeProps.toGeneratedValue(key) }
                 val choicesDefinition = choices.map { entry -> "    ${entry.key} = ${entry.value}" }.joinToString(separator = "\n")
-                val enumName = renderEnumName(field, "${entity.name} ${field.name}")
+                val enumName = renderEnumName(field, "${entity.name} ${field.name}").also { assignEnumName(field, it) }
                 val body = "class $enumName(StrEnum):\n$choicesDefinition"
                 // build-in since python 3.11:
                 // headers.add("from enum import StrEnum")
                 // innerMetadata["validate"] = "[marshmallow.fields.validate.OneOf($enumName)]"
-                assignEnumName(field, enumName)
                 addCodePart(Reader.readFileOrResourceOrUrl("resource:/templates/python/strEnum.py"))
                 addCodePart(body, enumName)
                 innerMetadata["validate"] = "[marshmallow.fields.validate.OneOf(list(map(str, $enumName)))]"

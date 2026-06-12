@@ -68,9 +68,23 @@
     },
     {
       "name": "get container DTO",
+      "description": "endpoint with optional enum filter",
       "dtype": "container DTO",
       "verb": "GET",
-      "path": "/api/v1/container"
+      "path": "/api/v1/container",
+      "arguments": [
+        {
+          "name": "filter_by",
+          "dtype": "str",
+          "enum": {
+            "key 1": "value 1",
+            "key 2": "value 2",
+            "key 3": "value 3"
+          },
+          "nullable": true,
+          "default": null
+        }
+      ]
     }
   ]
 }
