@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from dataclasses import field
 from datetime import datetime
 from datetime import timedelta
-from enum import Enum
+from enum import StrEnum
 import marshmallow
 import marshmallow_dataclass
 import re
@@ -71,20 +71,6 @@ def timedelta_to_java_duration(delta: timedelta) -> str:
     """
     seconds = delta.total_seconds()
     return 'PT{}S'.format(int(seconds))
-
-
-class StrEnum(str, Enum):
-    """Enum where members are also (and must be) strings."""
-
-    def __new__(cls, *values):
-        """Values must already be of type `str`"""
-        value = str(*values)
-        member = str.__new__(cls, value)
-        member._value_ = value
-        return member
-
-    def __str__(self):
-        return self._value_
 
 
 class EnumValue(StrEnum):

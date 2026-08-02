@@ -11,7 +11,7 @@ from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
 from decimal import Decimal
-from enum import Enum
+from enum import StrEnum
 from funcy import memoize
 from gevent._semaphore import Semaphore
 from gevent.event import AsyncResult
@@ -176,20 +176,6 @@ def timedelta_to_java_duration(delta: timedelta) -> str:
     """
     seconds = delta.total_seconds()
     return 'PT{}S'.format(int(seconds))
-
-
-class StrEnum(str, Enum):
-    """Enum where members are also (and must be) strings."""
-
-    def __new__(cls, *values):
-        """Values must already be of type `str`"""
-        value = str(*values)
-        member = str.__new__(cls, value)
-        member._value_ = value
-        return member
-
-    def __str__(self):
-        return self._value_
 
 
 class EnumValue(StrEnum):

@@ -107,7 +107,7 @@ abstract class PyBaseClientGenerator(proxy: AbstractCodeGenerator? = null) : Abs
                 dtypeProps.definition
                     .let {
                         if (argument.isEnum) {
-                            headers.add("from enum import Enum")
+                            headers.add("from enum import StrEnum")
                             val enumName = renderEnumName(argument.toField()).also { name -> assignEnumName(argument.toField(), name) }
                             val choices =
                                 argument.enum!!.keys.associate { key ->
@@ -118,10 +118,6 @@ abstract class PyBaseClientGenerator(proxy: AbstractCodeGenerator? = null) : Abs
                                     "    ${entry.key} = ${entry.value}"
                                 }.joinToString(separator = "\n")
                             val body = "class $enumName(StrEnum):\n$choicesDefinition"
-                            // build-in since python 3.11:
-                            // headers.add("from enum import StrEnum")
-                            // innerMetadata["validate"] = "[marshmallow.fields.validate.OneOf($enumName)]"
-                            addCodePart(Reader.readFileOrResourceOrUrl("resource:/templates/python/strEnum.py"))
                             addCodePart(body, enumName)
                             enumName
                         } else {
