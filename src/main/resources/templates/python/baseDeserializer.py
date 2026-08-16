@@ -1,5 +1,5 @@
 class BaseDeserializer:
-    def __init__(self, use_response_streaming: bool):
+    def __init__(self, use_response_streaming: bool = False):
         self._use_response_streaming = use_response_streaming
 
     def deserialize(self, raw_data: RESPONSE_BODY, data_class: t.Type | None = None, many: bool = False) -> t.Iterator[t.Any]:

@@ -402,7 +402,7 @@ class BaseJsonHttpClient:
 
 
 class BaseSerializer:
-    def __init__(self, deserializer: 'BaseDeserializer', use_request_payload_validation: bool):
+    def __init__(self, deserializer: 'BaseDeserializer | None' = None, use_request_payload_validation: bool = False):
         self._use_request_payload_validation = use_request_payload_validation
         self._deserializer = deserializer
 
@@ -470,7 +470,7 @@ class BaseSerializer:
 
 
 class BaseDeserializer:
-    def __init__(self, use_response_streaming: bool):
+    def __init__(self, use_response_streaming: bool = False):
         self._use_response_streaming = use_response_streaming
 
     def deserialize(self, raw_data: RESPONSE_BODY, data_class: t.Type | None = None, many: bool = False) -> t.Iterator[t.Any]:

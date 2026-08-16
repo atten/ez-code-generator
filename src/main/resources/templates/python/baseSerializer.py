@@ -1,5 +1,5 @@
 class BaseSerializer:
-    def __init__(self, deserializer: 'BaseDeserializer', use_request_payload_validation: bool):
+    def __init__(self, deserializer: 'BaseDeserializer | None' = None, use_request_payload_validation: bool = False):
         self._use_request_payload_validation = use_request_payload_validation
         self._deserializer = deserializer
 
