@@ -1,6 +1,6 @@
 [project]
 name = "ez-code-generator"
-version = "5.0.0"
+version = "5.0.1"
 description = "Console tool for generating API clients, data classes and validators"
 license = "MIT"
 readme = "README.md"
